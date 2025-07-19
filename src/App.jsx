@@ -1,6 +1,7 @@
 import { Box, Button, CircularProgress, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import './App.css'
 import { useState } from "react"
+import axios from 'axios';
 
 
 function App() {
@@ -15,9 +16,17 @@ function App() {
     setLoading(true);
     setError('');
     try{
+      const response =await axios.post("http://localhost:8080/api/email/generate",{
+        emailContent,
+        tone
+      });
+      setGeneratedReply(typeof response.data ==='string' ? response.data : JSON.stringify(response.data));
 
     }catch (error){
-      
+      setError('Failed to generate email reply. Please try again.');
+      console.error(error);
+    } finally{
+      setLoading(false);
     }
 
   };
